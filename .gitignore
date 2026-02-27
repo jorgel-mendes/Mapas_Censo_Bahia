@@ -1,0 +1,40 @@
+# R
+.Rhistory
+.RData
+.Rproj.user
+*.Rproj
+.Rapp.history
+.httr-oauth
+
+# Cache do cnefetools
+cache/
+
+# Arquivos temporários
+*.tmp
+*.bak
+*~
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node modules (caso use alguma ferramenta JS)
+node_modules/
+
+# Logs
+*.log
+
+# Dados brutos (opcional, caso baixe dados adicionais)
+data/raw/
+*.zip
+*.gz
+
+# Não ignorar a pasta docs (necessária para GitHub Pages)
+!docs/

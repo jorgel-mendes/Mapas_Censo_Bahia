@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapas de Renda - Bahia | Censo 2022</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .menu-principal {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .menu-card h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .menu-card p {
+            color: #666;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .menu-card .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .lista-municipios {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .lista-municipios.ativo {
+            display: block;
+        }
+
+        .lista-municipios h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .btn-voltar {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-voltar:hover {
+            background: #5568d3;
+            transform: translateX(-5px);
+        }
+
+        .grid-municipios {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .municipio-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .municipio-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 50px;
+            padding: 20px;
+            opacity: 0.9;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .menu-card h2 {
+                font-size: 1.5em;
+            }
+
+            .grid-municipios {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Mapas de Renda da Bahia</h1>
+            <p>Análise de Renda Média por Município - Censo IBGE 2022</p>
+        </header>
+
+        <!-- Menu Principal -->
+        <div id="menuPrincipal" class="menu-principal">
+            <div class="menu-card" onclick="mostrarMunicipios('comBairros')">
+                <div class="icon">🏘️</div>
+                <h2>Renda por Bairro</h2>
+                <p>Municípios da Bahia com bairros cadastrados no IBGE. Visualize a distribuição de renda por bairros.</p>
+            </div>
+
+            <div class="menu-card" onclick="mostrarMunicipios('semBairros')">
+                <div class="icon">🏙️</div>
+                <h2>Renda por Setor</h2>
+                <p>20 maiores municípios da Bahia. Visualize a distribuição de renda por setor censitário.</p>
+            </div>
+        </div>
+
+        <!-- Informações -->
+        <div class="info-box">
+            <h3>ℹ️ Sobre os Mapas</h3>
+            <p>
+                Os mapas utilizam <strong>interpolação dasimétrica</strong> através do pacote <em>cnefetools</em>, 
+                distribuindo dados de setores censitários usando pontos de endereço do CNEFE 
+                (Cadastro Nacional de Endereços para Fins Estatísticos).
+            </p>
+            <p style="margin-top: 10px;">
+                <strong>Fonte:</strong> IBGE - Censo Demográfico 2022 | CNEFE 2022
+            </p>
+        </div>
+
+        <!-- Lista de Municípios COM Bairros -->
+        <div id="listaComBairros" class="lista-municipios">
+            <button class="btn-voltar" onclick="voltarMenu()">← Voltar ao Menu</button>
+            <h2>Municípios com Bairros Cadastrados</h2>
+            <div class="grid-municipios" id="gridComBairros">
+                <!-- Será preenchido dinamicamente -->
+            </div>
+        </div>
+
+        <!-- Lista de Municípios SEM Bairros (20 Maiores) -->
+        <div id="listaSemBairros" class="lista-municipios">
+            <button class="btn-voltar" onclick="voltarMenu()">← Voltar ao Menu</button>
+            <h2>20 Maiores Municípios da Bahia</h2>
+            <div class="grid-municipios">
+                <a href="mapas/sem_bairros/salvador.html" class="municipio-link">Salvador</a>
+                <a href="mapas/sem_bairros/feira_de_santana.html" class="municipio-link">Feira de Santana</a>
+                <a href="mapas/sem_bairros/vitoria_da_conquista.html" class="municipio-link">Vitória da Conquista</a>
+                <a href="mapas/sem_bairros/camacari.html" class="municipio-link">Camaçari</a>
+                <a href="mapas/sem_bairros/juazeiro.html" class="municipio-link">Juazeiro</a>
+                <a href="mapas/sem_bairros/itabuna.html" class="municipio-link">Itabuna</a>
+                <a href="mapas/sem_bairros/lauro_de_freitas.html" class="municipio-link">Lauro de Freitas</a>
+                <a href="mapas/sem_bairros/ilheus.html" class="municipio-link">Ilhéus</a>
+                <a href="mapas/sem_bairros/jequie.html" class="municipio-link">Jequié</a>
+                <a href="mapas/sem_bairros/teixeira_de_freitas.html" class="municipio-link">Teixeira de Freitas</a>
+                <a href="mapas/sem_bairros/barreiras.html" class="municipio-link">Barreiras</a>
+                <a href="mapas/sem_bairros/alagoinhas.html" class="municipio-link">Alagoinhas</a>
+                <a href="mapas/sem_bairros/porto_seguro.html" class="municipio-link">Porto Seguro</a>
+                <a href="mapas/sem_bairros/simoes_filho.html" class="municipio-link">Simões Filho</a>
+                <a href="mapas/sem_bairros/paulo_afonso.html" class="municipio-link">Paulo Afonso</a>
+                <a href="mapas/sem_bairros/eunapolis.html" class="municipio-link">Eunápolis</a>
+                <a href="mapas/sem_bairros/santo_antonio_de_jesus.html" class="municipio-link">Santo Antônio de Jesus</a>
+                <a href="mapas/sem_bairros/luis_eduardo_magalhaes.html" class="municipio-link">Luís Eduardo Magalhães</a>
+                <a href="mapas/sem_bairros/valenca.html" class="municipio-link">Valença</a>
+                <a href="mapas/sem_bairros/guanambi.html" class="municipio-link">Guanambi</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>
+                Desenvolvido com ❤️ usando <strong>R</strong>, <strong>cnefetools</strong> e <strong>mapview</strong>
+            </p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/observatoriofieb/Mapas_Censo_Bahia" target="_blank">
+                    Ver código no GitHub
+                </a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Lista de municípios com bairros (verificado no IBGE Censo 2022)
+        const municipiosComBairros = [
+            { nome: "Euclides da Cunha", arquivo: "euclides_da_cunha" },
+            { nome: "Feira de Santana", arquivo: "feira_de_santana" },
+            { nome: "Ilhéus", arquivo: "ilh_eus" },
+            { nome: "Itabuna", arquivo: "itabuna" },
+            { nome: "Juazeiro", arquivo: "juazeiro" },
+            { nome: "Lauro de Freitas", arquivo: "lauro_de_freitas" },
+            { nome: "Ruy Barbosa", arquivo: "ruy_barbosa" },
+            { nome: "Salvador", arquivo: "salvador" },
+            { nome: "Santo Antônio de Jesus", arquivo: "santo_ant_onio_de_jesus" },
+            { nome: "Uruçuca", arquivo: "urucuca" },
+            { nome: "Vitória da Conquista", arquivo: "vit_oria_da_conquista" }
+        ];
+
+        // Preencher grid de municípios com bairros
+        const gridComBairros = document.getElementById('gridComBairros');
+        municipiosComBairros.forEach(muni => {
+            const link = document.createElement('a');
+            link.href = `mapas/com_bairros/${muni.arquivo}.html`;
+            link.className = 'municipio-link';
+            link.textContent = muni.nome;
+            gridComBairros.appendChild(link);
+        });
+
+        function mostrarMunicipios(tipo) {
+            document.getElementById('menuPrincipal').style.display = 'none';
+            
+            if (tipo === 'comBairros') {
+                document.getElementById('listaComBairros').classList.add('ativo');
+            } else {
+                document.getElementById('listaSemBairros').classList.add('ativo');
+            }
+        }
+
+        function voltarMenu() {
+            document.getElementById('listaComBairros').classList.remove('ativo');
+            document.getElementById('listaSemBairros').classList.remove('ativo');
+            document.getElementById('menuPrincipal').style.display = 'grid';
+        }
+    </script>
+</body>
+</html>
